@@ -1,14 +1,15 @@
-# Fase de compilación
-FROM maven:3.8.4-openjdk-17 AS build
-WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline
-COPY src ./src
-RUN mvn package
+FROM maven:3.8.5-openjdk-17-slim AS builder
 
-# Fase de ejecución
-FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=build /app/target/test-1-0.0.1-SNAPSHOT.jar .
+WORKDIR /build
+
+COPY . .
+
+RUN mvn clean package
+
+FROM openjdk:17-slim
+
 EXPOSE 8080
-CMD ["java", "-jar", "test-1-0.0.1-SNAPSHOT.jar"]
+
+COPY --from=builder /build/target/test-1-0.0.1-SNAPSHOT.jar /app/test.jar
+
+CMD ["java", "-jar", "/app/test.jar"]

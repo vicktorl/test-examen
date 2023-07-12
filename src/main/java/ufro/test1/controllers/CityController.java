@@ -58,7 +58,7 @@ public class CityController {
 
             for (comunas person : persons) {
                 if (person.getCommuneName().equalsIgnoreCase(ciudad)) {
-                    regionCode = person.getRegionName();
+                    regionCode = person.getProvinceName();
                     break;
                 }
             }
